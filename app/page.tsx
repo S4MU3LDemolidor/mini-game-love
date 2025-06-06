@@ -1,9 +1,10 @@
 "use client"
 
-import React, { useState, useEffect, useRef, useCallback } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { HeartIcon, Volume2, VolumeX, ArrowLeft, ArrowRight, RefreshCw } from "lucide-react"
+import dynamic from "next/dynamic"
 
 // Game constants
 const CANVAS_WIDTH = 800
@@ -107,7 +108,9 @@ const levels: Level[] = [
 
 // Sound generation functions
 const createAudioContext = () => {
-  return new (window.AudioContext || (window as any).webkitAudioContext)()
+  return new (
+    window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
+  )()
 }
 
 const playJumpSound = (audioContext: AudioContext) => {
@@ -199,25 +202,16 @@ const playVictorySound = (audioContext: AudioContext) => {
   })
 }
 
-// Fixed floating hearts component that only renders on client
-const FloatingHearts = React.memo(() => {
-  const [mounted, setMounted] = useState(false)
-  const [heartPositions, setHeartPositions] = useState<Array<{ left: number; top: number; delay: number }>>([])
-
-  useEffect(() => {
-    setMounted(true)
-    // Generate heart positions only on client
-    const positions = Array.from({ length: 8 }, () => ({
-      left: Math.random() * 100,
-      top: Math.random() * 100,
-      delay: Math.random() * 5,
+// Client-only floating hearts component
+const FloatingHeartsComponent = () => {
+  const [heartPositions] = useState(() => {
+    // Generate positions only once when component mounts
+    return Array.from({ length: 8 }, (_, i) => ({
+      left: (i * 12.5 + Math.sin(i) * 10 + 10) % 100, // Deterministic positioning
+      top: (i * 15 + Math.cos(i) * 15 + 20) % 80,
+      delay: i * 0.5, // Deterministic delay
     }))
-    setHeartPositions(positions)
-  }, [])
-
-  if (!mounted) {
-    return null
-  }
+  })
 
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
@@ -236,6 +230,11 @@ const FloatingHearts = React.memo(() => {
       ))}
     </div>
   )
+}
+
+// Dynamically import the floating hearts to avoid SSR
+const FloatingHearts = dynamic(() => Promise.resolve(FloatingHeartsComponent), {
+  ssr: false,
 })
 
 export default function RomanticPixelGame() {
@@ -725,7 +724,7 @@ export default function RomanticPixelGame() {
           </div>
 
           {!isMobile && !gameStarted && (
-            <p className="text-center text-purple-700 mb-4">Clique "INICIAR JOGO" acima para começar</p>
+            <p className="text-center text-purple-700 mb-4">Clique &quot;INICIAR JOGO&quot; acima para começar</p>
           )}
 
           {gameStarted && !isMobile && (
@@ -777,15 +776,15 @@ export default function RomanticPixelGame() {
             <div className="flex flex-col gap-4">
               <Button
                 onClick={nextLevel}
-                className="bg-pink-500 hover:bg-pink-600 text-white text-lg py-3 rounded-none border-4 border-pink-700 transform hover:scale-105 transition-transform"
+                className="bg-pink-500 hover:bg-pink-600 text-white text-xl py-3 rounded-none border-4 border-pink-700 transform hover:scale-105 transition-transform"
               >
-                Próximo Nível
+                Próximo Nível 🚀
               </Button>
               <Button
                 onClick={restartLevel}
-                className="bg-purple-500 hover:bg-purple-600 text-white text-lg py-3 rounded-none border-4 border-purple-700 transform hover:scale-105 transition-transform"
+                className="bg-purple-500 hover:bg-purple-600 text-white text-xl py-3 rounded-none border-4 border-purple-700 transform hover:scale-105 transition-transform"
               >
-                Repetir Nível
+                Repetir Nível 🔄
               </Button>
             </div>
           </Card>
@@ -834,7 +833,7 @@ export default function RomanticPixelGame() {
               </Button>
             </div>
 
-            <p className="text-sm text-purple-600 mt-4">(Não há resposta não aqui! 😉)</p>
+            <p className="text-sm text-purple-600 mt-4">(Não há resposta errada aqui! 😉)</p>
 
             <Button
               onClick={restartGame}
