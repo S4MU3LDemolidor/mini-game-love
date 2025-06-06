@@ -833,13 +833,13 @@ export default function RomanticPixelGame() {
               </Button>
             </div>
 
-            <p className="text-sm text-purple-600 mt-4">(Não há resposta errada aqui! 😉)</p>
+            <p className="text-sm text-purple-600 mt-4">(Não há resposta não aqui! 😉)</p>
 
             <Button
               onClick={restartGame}
               className="mt-8 bg-blue-500 hover:bg-blue-600 text-white text-sm py-2 rounded-none border-2 border-blue-700 transform hover:scale-105 transition-transform"
             >
-              Jogar Novamente Desde o Início 🎮
+              Jogar Novamente
             </Button>
           </Card>
         </div>
