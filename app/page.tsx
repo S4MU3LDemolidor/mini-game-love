@@ -239,8 +239,8 @@ const FloatingHearts = dynamic(() => Promise.resolve(FloatingHeartsComponent), {
 
 export default function RomanticPixelGame() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const gameLoopRef = useRef<number>()
-  const audioContextRef = useRef<AudioContext>()
+  const gameLoopRef = useRef<number | undefined>(undefined)
+  const audioContextRef = useRef<AudioContext | undefined>(undefined)
 
   const [gameStarted, setGameStarted] = useState(false)
   const [showModal, setShowModal] = useState(false)
