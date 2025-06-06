@@ -776,15 +776,15 @@ export default function RomanticPixelGame() {
             <div className="flex flex-col gap-4">
               <Button
                 onClick={nextLevel}
-                className="bg-pink-500 hover:bg-pink-600 text-white text-xl py-3 rounded-none border-4 border-pink-700 transform hover:scale-105 transition-transform"
+                className="bg-pink-500 hover:bg-pink-600 text-white text-lg py-3 rounded-none border-4 border-pink-700 transform hover:scale-105 transition-transform"
               >
-                Próximo Nível 🚀
+                Próximo Nível
               </Button>
               <Button
                 onClick={restartLevel}
-                className="bg-purple-500 hover:bg-purple-600 text-white text-xl py-3 rounded-none border-4 border-purple-700 transform hover:scale-105 transition-transform"
+                className="bg-purple-500 hover:bg-purple-600 text-white text-lg py-3 rounded-none border-4 border-purple-700 transform hover:scale-105 transition-transform"
               >
-                Repetir Nível 🔄
+                Repetir Nível
               </Button>
             </div>
           </Card>
